@@ -2,6 +2,8 @@ package bolts;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
+import java.util.LinkedList;
 
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;

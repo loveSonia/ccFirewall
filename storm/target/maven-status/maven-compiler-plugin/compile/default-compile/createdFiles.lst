@@ -1,7 +1,9 @@
 bolts/WordNormalizer.class
 spouts/TmpSpout.class
+bolts/PVBolt.class
 bolts/WordCounter.class
-bolts/VisitCount.class
+config/CCConfig.class
+config/ConfigReader.class
 Request.class
 spouts/RandomSpout.class
 bolts/RiskBolt.class

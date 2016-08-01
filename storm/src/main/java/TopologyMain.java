@@ -8,7 +8,8 @@ import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import spouts.TmpSpout;
 import bolts.RiskBolt;
-import bolts.VisitCount;
+import bolts.PVBolt;
+import config.CCConfig;
 import backtype.storm.StormSubmitter;
 import backtype.storm.generated.StormTopology;
 import backtype.storm.spout.SchemeAsMultiScheme;
@@ -28,11 +29,16 @@ public class TopologyMain {
 
     public static void main(String[] args) throws Exception{
 
-        Config.getConfigInfo();
+        if (args.length != 1) {
+            System.out.println("Argument Error!");
+            return ;
+        }
+
+        CCConfig.getConfigInfo(args[0]);
       
         TopologyBuilder builder = new TopologyBuilder();
       
-        BrokerHosts hosts = new ZkHosts("172.18.1.209:2181");
+        BrokerHosts hosts = new ZkHosts(CCConfig.ZkHosts);
         SpoutConfig spoutConfig = new SpoutConfig(hosts, "test", "", UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
         KafkaSpout kafkaSpout = new KafkaSpout(spoutConfig);
@@ -40,7 +46,7 @@ public class TopologyMain {
         // set Spout.
         builder.setSpout("word", kafkaSpout, 3);
         //builder.setSpout("word", new TmpSpout());
-        builder.setBolt("count", new VisitCount()).shuffleGrouping("word");
+        builder.setBolt("count", new PVBolt()).shuffleGrouping("word");
         builder.setBolt("risk", new RiskBolt(), 2).shuffleGrouping("count");
         System.out.println("set down");
 
